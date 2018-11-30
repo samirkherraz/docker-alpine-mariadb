@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv sh
+
+if [ -z "$(ls -A "/var/lib/mysql")" ];
+then
+        su - mysql -s /bin/sh -c "mysql_install_db"
+        touch /tmp/mariadb
+        sleep 1
+        mysqladmin password "$ROOT_PASSWORD"
+        COOKIE=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+        sed -i "s;cfg['blowfish_secret'] = '';cfg['blowfish_secret'] = '$COOKIE';g" /etc/phpmyadmin/config.inc.php
+fi

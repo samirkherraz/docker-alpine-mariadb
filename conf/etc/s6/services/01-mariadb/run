@@ -1,0 +1,3 @@
+#!/bin/sh
+
+service-handler "MARIADB" "su - mysql -s /bin/sh -c 'mysqld'" "/tmp/mariadb"
