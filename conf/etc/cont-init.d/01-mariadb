@@ -44,10 +44,8 @@ COUNTER=0
 
 if [ -z "$(ls -A "/var/lib/mysql")" ];
 then
-        su - mysql -s /bin/sh -c "mysql_install_db"
-        touch /tmp/mariadb
+        su - mysql -s /bin/sh -c "mysql_install_db" && echo "0" > /tmp/mariadb || echo "1" > /tmp/mariadb
         rm /tmp/cmd
-
         do_query "DELETE FROM mysql.user WHERE User='';"
         do_query "DELETE FROM mysql.user WHERE User <> 'root';"
         do_query "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1');"
@@ -76,9 +74,9 @@ then
 
         do_exec_query
         mysqladmin -u root password $ROOT_PASSWORD
-        sed -i "s;#;;g" /etc/mysql/my.cnf
-        sed -i "s;{ROOT_PASSWORD};${ROOT_PASSWORD};g" /etc/mysql/my.cnf
+        echo "0" > /tmp/phpmyadmin
 
 else
-        touch /tmp/mariadb
+        echo "0" > /tmp/mariadb
+        echo "0" > /tmp/phpmyadmin
 fi
