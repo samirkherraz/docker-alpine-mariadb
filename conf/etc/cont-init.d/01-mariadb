@@ -1,5 +1,4 @@
 #!/usr/bin/with-contenv sh
-
 do_query() {
     echo "$1" >> /tmp/cmd
   
@@ -37,14 +36,15 @@ next(){
 chown mysql:mysql /var/lib/mysql -R
 
 COOKIE=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-sed -i "s;cfg['blowfish_secret'] = '';cfg['blowfish_secret'] = '$COOKIE';g" /etc/phpmyadmin/config.inc.php
-
+sed -i "/\['blowfish_secret'\].*/c\\\$cfg\['blowfish_secret'\] = '$COOKIE';" /etc/phpmyadmin/config.inc.php
+echo "\$cfg['TempDir']  = '/tmp/'; " >> /etc/phpmyadmin/config.inc.php
 
 COUNTER=0
 
 if [ -z "$(ls -A "/var/lib/mysql")" ];
 then
-        su - mysql -s /bin/sh -c "mysql_install_db" && echo "0" > /tmp/mariadb || echo "1" > /tmp/mariadb
+        su - mysql -s /bin/sh -c "mysql_install_db" 
+        echo "0" > /tmp/mariadb
         rm /tmp/cmd
         do_query "DELETE FROM mysql.user WHERE User='';"
         do_query "DELETE FROM mysql.user WHERE User <> 'root';"
@@ -72,7 +72,7 @@ then
             sleep 1
         done
 
-        do_exec_query
+        do_exec_query 
         mysqladmin -u root password $ROOT_PASSWORD
         echo "0" > /tmp/phpmyadmin
 

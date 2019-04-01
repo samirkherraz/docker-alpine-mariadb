@@ -1,6 +1,6 @@
 #!/bin/sh
 NAME="PHP-FPM"
 COMMAND="php-fpm7 -F"
-WAIT="/tmp/mariadb"
+WAIT="/tmp/phpmyadmin"
 
 exec service-handler "$NAME" "$COMMAND" "$WAIT"
