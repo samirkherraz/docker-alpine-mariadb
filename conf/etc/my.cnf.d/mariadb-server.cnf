@@ -42,9 +42,12 @@ tmp_table_size                  = 256M
 max_heap_table_size             = 256M
 table_open_cache                = 7500
 thread_cache_size               = 25
-innodb_io_capacity		= 100
+innodb_io_capacity		        = 100
 skip-external-locking 
 log_queries_not_using_indexes
+
+sql_mode                        = ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+
 
 [mysqldump]
 quick
